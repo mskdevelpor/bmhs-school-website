@@ -47,33 +47,12 @@
     }
 
     .logo-wrap img {
-      width: 130px;
-      height: 130px;
+      width: 120px;
+      height: 120px;
       object-fit: contain;
       filter: drop-shadow(0 4px 16px rgba(0,0,0,0.35));
       border-radius: 50%;
-      border: 2px solid var(--gold);
     }
-
-    .logo-fallback {
-      width: 130px;
-      height: 130px;
-      background: radial-gradient(circle, var(--green-mid) 0%, var(--green-dark) 100%);
-      border: 3px double var(--gold);
-      border-radius: 50%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: var(--gold);
-      font-family: 'Amiri', serif;
-      font-size: 0.75rem;
-      font-weight: bold;
-      text-align: center;
-      padding: 10px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-    }
-    .logo-fallback span { color: var(--white); font-size: 0.9rem; }
 
     .school-title h1 {
       font-family: 'Amiri', serif;
@@ -153,7 +132,6 @@
       margin-bottom: 16px;
       border: 1px solid var(--gold);
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      position: relative;
     }
 
     .hero h2 {
@@ -245,7 +223,7 @@
 
     .section-title h3 {
       font-family: 'Amiri', serif;
-      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-size: clamp(1.4rem, 3.5vw, 20rem);
       color: var(--green-dark);
     }
 
@@ -395,11 +373,8 @@
 
   <header>
     <div class="logo-wrap">
-      <img src="logo.png" alt="Bismillah Model High School Logo" onerror="this.style.display='none'; document.getElementById('logo-fallback-id').style.display='flex';" />
-      <div id="logo-fallback-id" class="logo-fallback" style="display:none;">
-        <span>BMHS</span>
-        Bismillah<br>School
-      </div>
+      <img src="logo.png" alt="Bismillah Model High School Logo" onerror="this.style.display='none'; document.getElementById('logo-svg').style.display='flex';" />
+      <div id="logo-svg" style="display:none; width:120px; height:120px; background:rgba(255,255,255,0.15); border-radius:50%; align-items:center; justify-content:center; font-size:3rem;">📚</div>
     </div>
     <div class="school-title">
       <h1>Bismillah Model High School</h1>
@@ -463,3 +438,100 @@
             <div class="card-icon">📖</div>
             <h4>Quran & Islamic Studies</h4>
             <p>Daily Quran recitation and Islamic education integrated into the curriculum.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔬</div>
+            <h4>Science & Mathematics</h4>
+            <p>Modern science labs and strong math programs preparing students for future careers.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">💻</div>
+            <h4>Computer Education</h4>
+            <p>Basic computer skills and digital literacy for the modern world.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🏅</div>
+            <h4>Co-curricular Activities</h4>
+            <p>Sports, debate, and arts programs to develop confident, well-rounded students.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">👩‍🏫</div>
+            <h4>Experienced Faculty</h4>
+            <p>Qualified and caring teachers dedicated to every student's success.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">🛡️</div>
+            <h4>Safe Environment</h4>
+            <p>A secure, disciplined, and nurturing atmosphere for all children.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section id="notices">
+    <div class="section-title">
+      <h3>Notice Board</h3>
+      <span class="underline"></span>
+    </div>
+    <div class="notices">
+      <div class="notice-item">
+        <div class="notice-date">JUN<br/>25</div>
+        <div class="notice-text">
+          <strong>Annual Examinations Schedule</strong>
+          Final exams will begin from July 5th. Students are requested to check the timetable on the school notice board.
+        </div>
+      </div>
+      <div class="notice-item">
+        <div class="notice-date">JUN<br/>20</div>
+        <div class="notice-text">
+          <strong>Parent-Teacher Meeting</strong>
+          PTM will be held on June 30th from 9 AM to 1 PM. All parents are requested to attend.
+        </div>
+      </div>
+      <div class="notice-item">
+        <div class="notice-date">JUN<br/>15</div>
+        <div class="notice-text">
+          <strong>New Admissions Open</strong>
+          Admissions for the new academic year 2026-27 are now open. Contact the school office for details.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bg-light" id="contact">
+    <div class="inner">
+      <section>
+        <div class="section-title">
+          <h3>Contact Us</h3>
+          <span class="underline"></span>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-box">
+            <div class="icon">📍</div>
+            <h4>Address</h4>
+            <p>Madina Colony<br/>Ellah Abad, Punjab<br/>Pakistan</p>
+          </div>
+          <div class="contact-box">
+            <div class="icon">📞</div>
+            <h4>Principal Contact</h4>
+            <p>0300 7575178<br>School Office</p>
+            <a href="tel:03007575178" class="call-btn">📞 Call Principal</a>
+          </div>
+          <div class="contact-box">
+            <div class="icon">🕗</div>
+            <h4>School Hours</h4>
+            <p>Monday – Saturday<br/>8:00 AM – 2:00 PM</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 <strong>Bismillah Model High School</strong> — Madina Colony, Ellah Abad</p>
+    <p style="margin-top:6px;">Developed with ❤️ for the students of BMHS</p>
+  </footer>
+
+</body>
+</html>
