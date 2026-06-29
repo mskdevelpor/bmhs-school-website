@@ -12,28 +12,32 @@ export interface Student {
   dob: string;
   classId: string;
   section: string;
-  parentId: string;
+  parentId: string | null;
+  parentName: string | null;
+  parentPhone: string | null;
   phone: string;
   email: string;
   address: string;
   admissionDate: string;
   status: 'Active' | 'Inactive' | 'Graduated';
-  bloodGroup: string;
+  photoUrl: string | null;
 }
 
 export interface Teacher {
   id: string;
-  employeeId: string;
+  employeeId?: string;
   name: string;
   gender: 'Male' | 'Female';
   email: string;
   phone: string;
+  address?: string;
   subjects: string[];
   classId?: string;
   qualification: string;
   joinDate: string;
   salary: number;
   status: 'Active' | 'On Leave' | 'Inactive';
+  photoUrl?: string | null;
 }
 
 export interface Parent {
@@ -52,9 +56,10 @@ export interface ClassInfo {
   name: string;
   level: string;
   sections: string[];
-  classTeacherId?: string;
+  classTeacherId?: string | null;
   room: string;
   capacity: number;
+  sortOrder: number;
 }
 
 export interface Subject {
@@ -122,9 +127,13 @@ export interface TimetableSlot {
 export interface Announcement {
   id: string;
   title: string;
-  body: string;
+  content: string;
+  category: string;
   audience: 'All' | 'Teachers' | 'Parents' | 'Students';
-  date: string;
   priority: 'Low' | 'Normal' | 'High';
-  author: string;
+  status: 'Active' | 'Draft' | 'Expired';
+  date: string;
+  expiryDate?: string | null;
+  createdBy?: string | null;
+  createdAt?: string;
 }

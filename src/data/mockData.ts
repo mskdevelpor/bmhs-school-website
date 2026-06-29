@@ -43,19 +43,19 @@ export const SCHOOL = {
 };
 
 export const classes: ClassInfo[] = [
-  { id: 'c0', name: 'Nursery', level: 'Pre-Primary', sections: ['A'], classTeacherId: 't1', room: 'G-01', capacity: 25 },
-  { id: 'c0a', name: 'Play Group', level: 'Pre-Primary', sections: ['A'], classTeacherId: 't2', room: 'G-02', capacity: 25 },
-  { id: 'c0b', name: 'Prep', level: 'Pre-Primary', sections: ['A', 'B'], classTeacherId: 't3', room: 'G-03', capacity: 30 },
-  { id: 'c1', name: 'Class 1', level: 'Primary', sections: ['A', 'B'], classTeacherId: 't4', room: 'G-04', capacity: 30 },
-  { id: 'c2', name: 'Class 2', level: 'Primary', sections: ['A', 'B'], classTeacherId: 't5', room: '1-01', capacity: 30 },
-  { id: 'c3', name: 'Class 3', level: 'Primary', sections: ['A', 'B'], classTeacherId: 't6', room: '1-02', capacity: 30 },
-  { id: 'c4', name: 'Class 4', level: 'Primary', sections: ['A'], classTeacherId: 't7', room: '1-03', capacity: 30 },
-  { id: 'c5', name: 'Class 5', level: 'Primary', sections: ['A'], classTeacherId: 't8', room: '2-01', capacity: 30 },
-  { id: 'c6', name: 'Class 6', level: 'Middle', sections: ['A', 'B'], classTeacherId: 't1', room: '2-02', capacity: 35 },
-  { id: 'c7', name: 'Class 7', level: 'Middle', sections: ['A', 'B'], classTeacherId: 't2', room: '2-03', capacity: 35 },
-  { id: 'c8', name: 'Class 8', level: 'Middle', sections: ['A', 'B'], classTeacherId: 't3', room: '3-01', capacity: 35 },
-  { id: 'c9', name: 'Class 9', level: 'High', sections: ['A', 'B'], classTeacherId: 't4', room: '3-02', capacity: 40 },
-  { id: 'c10', name: 'Class 10', level: 'High', sections: ['A', 'B'], classTeacherId: 't5', room: '3-03', capacity: 40 },
+  { id: 'c0', name: 'Nursery', level: 'Pre-Primary', sections: ['A'], classTeacherId: 't1', room: 'G-01', capacity: 25, sortOrder: 0 },
+  { id: 'c0a', name: 'Play Group', level: 'Pre-Primary', sections: ['A'], classTeacherId: 't2', room: 'G-02', capacity: 25, sortOrder: 1 },
+  { id: 'c0b', name: 'Prep', level: 'Pre-Primary', sections: ['A', 'B'], classTeacherId: 't3', room: 'G-03', capacity: 30, sortOrder: 2 },
+  { id: 'c1', name: 'Class 1', level: 'Primary', sections: ['A', 'B'], classTeacherId: 't4', room: 'G-04', capacity: 30, sortOrder: 3 },
+  { id: 'c2', name: 'Class 2', level: 'Primary', sections: ['A', 'B'], classTeacherId: 't5', room: '1-01', capacity: 30, sortOrder: 4 },
+  { id: 'c3', name: 'Class 3', level: 'Primary', sections: ['A', 'B'], classTeacherId: 't6', room: '1-02', capacity: 30, sortOrder: 5 },
+  { id: 'c4', name: 'Class 4', level: 'Primary', sections: ['A'], classTeacherId: 't7', room: '1-03', capacity: 30, sortOrder: 6 },
+  { id: 'c5', name: 'Class 5', level: 'Primary', sections: ['A'], classTeacherId: 't8', room: '2-01', capacity: 30, sortOrder: 7 },
+  { id: 'c6', name: 'Class 6', level: 'Middle', sections: ['A', 'B'], classTeacherId: 't1', room: '2-02', capacity: 35, sortOrder: 8 },
+  { id: 'c7', name: 'Class 7', level: 'Middle', sections: ['A', 'B'], classTeacherId: 't2', room: '2-03', capacity: 35, sortOrder: 9 },
+  { id: 'c8', name: 'Class 8', level: 'Middle', sections: ['A', 'B'], classTeacherId: 't3', room: '3-01', capacity: 35, sortOrder: 10 },
+  { id: 'c9', name: 'Class 9', level: 'High', sections: ['A', 'B'], classTeacherId: 't4', room: '3-02', capacity: 40, sortOrder: 11 },
+  { id: 'c10', name: 'Class 10', level: 'High', sections: ['A', 'B'], classTeacherId: 't5', room: '3-03', capacity: 40, sortOrder: 12 },
 ];
 
 export const subjects: Subject[] = [
@@ -123,12 +123,14 @@ export const students: Student[] = Array.from({ length: 48 }, (_, i) => {
     classId: cls.id,
     section: pick(cls.sections, i),
     parentId: `p${(i % 15) + 1}`,
+    parentName: `${pick(firstNames, i + 3)} ${pick(lastNames, i + 2)}`,
+    parentPhone: `0301 ${String(2000000 + i * 12345).slice(0, 7)}`,
     phone: `0302 ${String(3000000 + i * 54321).slice(0, 7)}`,
     email: `student${i + 1}@bmhs.edu.pk`,
     address: `House ${20 + i}, Madina Colony, Ellah Abad`,
     admissionDate: `20${20 + (i % 5)}-0${(i % 9) + 1}-1${i % 9}`,
     status: i % 16 === 0 ? 'Inactive' : 'Active',
-    bloodGroup: pick(['A+', 'B+', 'O+', 'AB+', 'A-', 'O-'], i),
+    photoUrl: null,
   };
 });
 
@@ -202,11 +204,11 @@ export const timetable: TimetableSlot[] = (() => {
 })();
 
 export const announcements: Announcement[] = [
-  { id: 'n1', title: 'Mid Term Results Announced', body: 'Mid term examination results have been published. Parents can view results in the portal.', audience: 'All', date: dateStr(-1), priority: 'High', author: 'Principal Office' },
-  { id: 'n2', title: 'Parent-Teacher Meeting', body: 'PTM scheduled for Saturday 10:00 AM. All parents are requested to attend.', audience: 'Parents', date: dateStr(-3), priority: 'Normal', author: 'Administration' },
-  { id: 'n3', title: 'Winter Break', body: 'School will remain closed for winter break from Dec 23 to Jan 3. Classes resume Jan 6.', audience: 'All', date: dateStr(-5), priority: 'Normal', author: 'Principal Office' },
-  { id: 'n4', title: 'Quran Competition', body: 'Annual Quran recitation competition on Feb 20. Register with your Quran teacher.', audience: 'Students', date: dateStr(-7), priority: 'Low', author: 'Islamic Studies Dept' },
-  { id: 'n5', title: 'Staff Meeting', body: 'Mandatory staff meeting on Friday 2:00 PM in the staff room.', audience: 'Teachers', date: dateStr(-2), priority: 'Normal', author: 'Principal' },
+  { id: 'n1', title: 'Mid Term Results Announced', content: 'Mid term examination results have been published. Parents can view results in the portal.', audience: 'All', date: dateStr(-1), priority: 'High', category: 'Academic', status: 'Active', createdBy: 'Principal Office', createdAt: new Date().toISOString() },
+  { id: 'n2', title: 'Parent-Teacher Meeting', content: 'PTM scheduled for Saturday 10:00 AM. All parents are requested to attend.', audience: 'Parents', date: dateStr(-3), priority: 'Normal', category: 'Event', status: 'Active', createdBy: 'Administration', createdAt: new Date().toISOString() },
+  { id: 'n3', title: 'Winter Break', content: 'School will remain closed for winter break from Dec 23 to Jan 3. Classes resume Jan 6.', audience: 'All', date: dateStr(-5), priority: 'Normal', category: 'Holiday', status: 'Active', createdBy: 'Principal Office', createdAt: new Date().toISOString() },
+  { id: 'n4', title: 'Quran Competition', content: 'Annual Quran recitation competition on Feb 20. Register with your Quran teacher.', audience: 'Students', date: dateStr(-7), priority: 'Low', category: 'Event', status: 'Active', createdBy: 'Islamic Studies Dept', createdAt: new Date().toISOString() },
+  { id: 'n5', title: 'Staff Meeting', content: 'Mandatory staff meeting on Friday 2:00 PM in the staff room.', audience: 'Teachers', date: dateStr(-2), priority: 'Normal', category: 'Staff', status: 'Active', createdBy: 'Principal', createdAt: new Date().toISOString() },
 ];
 
 export function getStudentById(id: string): Student | undefined { return students.find(s => s.id === id); }
