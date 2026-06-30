@@ -1,4 +1,5 @@
 import { useHashRoute } from '@/lib/router';
+import { AuthProvider, useAuth } from '@/lib/auth';
 import { AppShell } from '@/components/layout/AppShell';
 import { Dashboard } from '@/pages/Dashboard';
 import { StudentsPage } from '@/pages/StudentsPage';
@@ -12,17 +13,30 @@ import { TimetablePage } from '@/pages/TimetablePage';
 import { AnnouncementsPage } from '@/pages/AnnouncementsPage';
 import { SettingsPage } from '@/pages/SettingsPage';
 import { LoginPage } from '@/pages/LoginPage';
+import { ShieldAlert } from 'lucide-react';
 
-function App() {
+function AppContent() {
   const { path, navigate } = useHashRoute();
+  const { user, canAccess, logout } = useAuth();
 
-  // Login page is standalone (no shell)
-  if (path === '/login') {
+  if (path === '/login' || !user) {
     return <LoginPage onNavigate={navigate} />;
   }
 
-  // Default to dashboard
   const currentPath = path === '/' ? '/dashboard' : path;
+
+  if (!canAccess(currentPath)) {
+    return (
+      <AppShell currentPath="/dashboard" onNavigate={navigate}>
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <ShieldAlert size={48} className="text-rose-500 mb-4" />
+          <h2 className="text-xl font-bold text-slate-800">Access Denied</h2>
+          <p className="text-slate-500 mt-2 max-w-sm">Aapke role ({user.role}) ko is page ka access nahi hai. Admin se contact karein.</p>
+          <button onClick={() => { logout(); navigate('/login'); }} className="btn-primary mt-6">Back to Login</button>
+        </div>
+      </AppShell>
+    );
+  }
 
   function renderPage() {
     switch (currentPath) {
@@ -45,6 +59,14 @@ function App() {
     <AppShell currentPath={currentPath} onNavigate={navigate}>
       {renderPage()}
     </AppShell>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

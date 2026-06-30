@@ -1,12 +1,50 @@
 import { useState } from 'react';
-import { School, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { School, Mail, Lock, Eye, EyeOff, ArrowRight, AlertCircle } from 'lucide-react';
 import { SCHOOL } from '@/data/mockData';
+import { useAuth } from '@/lib/auth';
+import type { Role } from '@/types';
 
 interface LoginPageProps { onNavigate: (path: string) => void; }
 
+const ROLE_CREDENTIALS: Record<Role, { email: string; password: string }> = {
+  admin: { email: 'admin@bmhs.edu.pk', password: 'admin123' },
+  teacher: { email: 'teacher@bmhs.edu.pk', password: 'teacher123' },
+  parent: { email: 'parent@bmhs.edu.pk', password: 'parent123' },
+  student: { email: 'student@bmhs.edu.pk', password: 'student123' },
+};
+
+const ROLE_HOME: Record<Role, string> = {
+  admin: '/dashboard',
+  teacher: '/dashboard',
+  parent: '/dashboard',
+  student: '/dashboard',
+};
+
 export function LoginPage({ onNavigate }: LoginPageProps) {
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState('admin');
+  const [role, setRole] = useState<Role>('admin');
+  const [email, setEmail] = useState(ROLE_CREDENTIALS.admin.email);
+  const [password, setPassword] = useState(ROLE_CREDENTIALS.admin.password);
+  const [error, setError] = useState('');
+  const { login } = useAuth();
+
+  function selectRole(r: Role) {
+    setRole(r);
+    setEmail(ROLE_CREDENTIALS[r].email);
+    setPassword(ROLE_CREDENTIALS[r].password);
+    setError('');
+  }
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError('');
+    if (!email.trim() || !password.trim()) {
+      setError('Email aur password dono zaroori hain');
+      return;
+    }
+    const user = login(role, email);
+    onNavigate(ROLE_HOME[user.role]);
+  }
 
   return (
     <div className="min-h-screen flex">
@@ -55,46 +93,55 @@ export function LoginPage({ onNavigate }: LoginPageProps) {
 
             {/* Role selector */}
             <div className="mt-6 grid grid-cols-4 gap-2">
-              {['admin', 'teacher', 'parent', 'student'].map((r) => (
-                <button key={r} onClick={() => setRole(r)}
+              {(['admin', 'teacher', 'parent', 'student'] as Role[]).map((r) => (
+                <button key={r} type="button" onClick={() => selectRole(r)}
                   className={`py-2 px-3 rounded-xl text-sm font-medium capitalize transition-all ${role === r ? 'bg-brand-600 text-white shadow-soft' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}>
                   {r}
                 </button>
               ))}
             </div>
 
-            <div className="mt-5 space-y-4">
+            <form onSubmit={handleSubmit} className="mt-5 space-y-4">
               <div>
                 <label className="label">Email Address</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input type="email" className="input pl-10" placeholder="admin@bmhs.edu.pk" defaultValue="admin@bmhs.edu.pk" />
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                    className="input pl-10" placeholder="admin@bmhs.edu.pk" />
                 </div>
               </div>
               <div>
                 <label className="label">Password</label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                  <input type={showPassword ? 'text' : 'password'} className="input pl-10 pr-10" placeholder="••••••••" defaultValue="password" />
-                  <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                  <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)}
+                    className="input pl-10 pr-10" placeholder="••••••••" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
-                  <input type="checkbox" className="rounded border-slate-300 text-brand-600 focus:ring-brand-500" /> Remember me
-                </label>
-                <button className="text-sm text-brand-600 hover:text-brand-700 font-medium">Forgot password?</button>
-              </div>
-              <button onClick={() => onNavigate('/dashboard')} className="btn-primary w-full py-3">
+
+              {error && (
+                <div className="flex items-center gap-2 text-sm text-rose-600 bg-rose-50 rounded-lg px-3 py-2">
+                  <AlertCircle size={16} /> {error}
+                </div>
+              )}
+
+              <button type="submit" className="btn-primary w-full py-3">
                 Sign In <ArrowRight size={16} />
               </button>
-            </div>
+            </form>
 
-            <p className="mt-6 text-center text-xs text-slate-400">
-              Demo mode — no authentication required. Click Sign In to explore the system.
-            </p>
+            <div className="mt-6 p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <p className="text-xs font-semibold text-slate-600 mb-1.5">Demo Credentials:</p>
+              <div className="space-y-1 text-xs text-slate-500">
+                <p><span className="font-medium">Admin:</span> admin@bmhs.edu.pk / admin123</p>
+                <p><span className="font-medium">Teacher:</span> teacher@bmhs.edu.pk / teacher123</p>
+                <p><span className="font-medium">Parent:</span> parent@bmhs.edu.pk / parent123</p>
+                <p><span className="font-medium">Student:</span> student@bmhs.edu.pk / student123</p>
+              </div>
+            </div>
           </div>
 
           <p className="mt-6 text-center text-xs text-slate-400">© {new Date().getFullYear()} {SCHOOL.name}. All rights reserved.</p>
