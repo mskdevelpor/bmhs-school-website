@@ -7,10 +7,12 @@ import {
 import { cn } from '@/lib/utils';
 import { SCHOOL } from '@/data/mockData';
 import { Avatar } from '@/components/ui/Common';
+import { useAuth } from '@/lib/auth';
+import type { Role } from '@/types';
 
 interface NavItem { path: string; label: string; icon: ReactNode; badge?: string; }
 
-const navGroups: { title: string; items: NavItem[] }[] = [
+const ALL_NAV_GROUPS: { title: string; items: NavItem[] }[] = [
   { title: 'Overview', items: [{ path: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> }] },
   {
     title: 'People',
@@ -39,11 +41,25 @@ const navGroups: { title: string; items: NavItem[] }[] = [
   },
 ];
 
+const ROLE_NAV: Record<Role, string[]> = {
+  admin: ['/dashboard', '/students', '/teachers', '/parents', '/attendance', '/results', '/classes', '/timetable', '/fees', '/announcements', '/settings'],
+  teacher: ['/dashboard', '/attendance', '/results', '/timetable', '/announcements'],
+  parent: ['/dashboard', '/results', '/fees', '/announcements'],
+  student: ['/dashboard', '/results', '/timetable', '/announcements'],
+};
+
+function getNavGroups(role: Role) {
+  const allowed = ROLE_NAV[role];
+  return ALL_NAV_GROUPS.map((g) => ({ ...g, items: g.items.filter((i) => allowed.includes(i.path)) })).filter((g) => g.items.length > 0);
+}
+
 interface AppShellProps { currentPath: string; onNavigate: (path: string) => void; children: ReactNode; }
 
 export function AppShell({ currentPath, onNavigate, children }: AppShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navGroups = user ? getNavGroups(user.role) : [];
 
   const pageTitle = (() => {
     for (const g of navGroups) for (const i of g.items) if (currentPath === i.path) return i.label;
@@ -51,6 +67,7 @@ export function AppShell({ currentPath, onNavigate, children }: AppShellProps) {
   })();
 
   function handleNav(path: string) { onNavigate(path); setMobileOpen(false); }
+  function handleLogout() { logout(); onNavigate('/login'); setProfileOpen(false); }
 
   return (
     <div className="min-h-screen bg-slate-50 flex">
@@ -85,10 +102,10 @@ export function AppShell({ currentPath, onNavigate, children }: AppShellProps) {
               </button>
               <div className="relative">
                 <button onClick={() => setProfileOpen((o) => !o)} className="flex items-center gap-2 p-1.5 pr-2 rounded-xl hover:bg-slate-100 transition-colors">
-                  <Avatar name="Admin User" size="sm" />
+                  <Avatar name={user?.name || 'User'} size="sm" />
                   <div className="hidden sm:block text-left">
-                    <p className="text-sm font-semibold text-slate-800 leading-tight">Admin</p>
-                    <p className="text-xs text-slate-500 leading-tight">Administrator</p>
+                    <p className="text-sm font-semibold text-slate-800 leading-tight capitalize">{user?.name || 'User'}</p>
+                    <p className="text-xs text-slate-500 leading-tight capitalize">{user?.role || ''}</p>
                   </div>
                   <ChevronDown size={16} className="text-slate-400" />
                 </button>
@@ -97,11 +114,11 @@ export function AppShell({ currentPath, onNavigate, children }: AppShellProps) {
                     <div className="fixed inset-0 z-10" onClick={() => setProfileOpen(false)} />
                     <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-pop border border-slate-200 py-1.5 z-20 animate-scale-in">
                       <div className="px-4 py-2.5 border-b border-slate-100">
-                        <p className="text-sm font-semibold text-slate-800">Admin User</p>
-                        <p className="text-xs text-slate-500">admin@bmhs.edu.pk</p>
+                        <p className="text-sm font-semibold text-slate-800">{user?.name}</p>
+                        <p className="text-xs text-slate-500">{user?.email}</p>
                       </div>
-                      <button onClick={() => { handleNav('/settings'); setProfileOpen(false); }} className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"><Settings size={16} /> Settings</button>
-                      <button onClick={() => { handleNav('/login'); setProfileOpen(false); }} className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-rose-600 hover:bg-rose-50"><LogOut size={16} /> Sign out</button>
+                      {user?.role === 'admin' && <button onClick={() => { handleNav('/settings'); setProfileOpen(false); }} className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-slate-600 hover:bg-slate-50"><Settings size={16} /> Settings</button>}
+                      <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-rose-600 hover:bg-rose-50"><LogOut size={16} /> Sign out</button>
                     </div>
                   </>
                 )}
